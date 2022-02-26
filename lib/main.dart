@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: HomePage(),
     );
   }
 }
@@ -26,9 +26,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool isOn = false;
+  final FlipCardController _controller = FlipCardController();
+  final FlipCardController controller = FlipCardController();
 
-  FlipCardController _controller = FlipCardController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,33 +38,44 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.s,
           children: [
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isOn = !isOn;
-                  });
-                },
-                child: Text(isOn ? 'Horizontal Flip' : 'Vertical Flip')),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FlipCard(
+                    controller: _controller,
+                    direction: FlipDirection.VERTICAL,
+                    flipOnTouch: false,
+                    front: customCard("Frond Side"),
+                    back: customCard("Back Side")),
+                FlipCard(
+                    controller: controller,
+                    direction: FlipDirection.HORIZONTAL,
+                    flipOnTouch: false,
+                    front: customCard("Frond Side"),
+                    back: customCard("Back Side")),
+              ],
+            ),
             const SizedBox(
               height: 40,
             ),
-            FlipCard(
-                controller: _controller,
-                direction:
-                    isOn ? FlipDirection.HORIZONTAL : FlipDirection.VERTICAL,
-                flipOnTouch: false,
-                front: customCard("Frond Side"),
-                back: customCard("Back Side")),
-            const SizedBox(
-              height: 40,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      _controller.toggleCard();
+                    },
+                    child: const Text("Flip Card Vertical")),
+                ElevatedButton(
+                    onPressed: () {
+                      controller.toggleCard();
+                    },
+                    child: const Text("Flip Card Horizontal")),
+              ],
             ),
-            ElevatedButton(
-                onPressed: () {
-                  _controller.toggleCard();
-                },
-                child: const Text("Flip Card"))
           ],
         ),
       ),
